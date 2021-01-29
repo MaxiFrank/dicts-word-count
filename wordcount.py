@@ -1,6 +1,7 @@
 import string
 import sys
 from collections import Counter
+from operator import itemgetter
 
 file = sys.argv[1]
 
@@ -30,14 +31,25 @@ def wordcount(ls):
     #     print(f'{key} {value}')
 
 
-read_lines = read_file(file)
-print(sorted(wordcount(read_lines).items(), key=wordcount(read_lines).values()))
+# read_lines = read_file(file)
+# print(sorted(wordcount(read_lines).items(), key=wordcount(read_lines).values()))
 
 # use collections.Counter in code below
 
 def word_counter(file):
     f = open(file, 'r')
-    read_file = f.read().split(' ')
-    return Counter(read_file)
+    read_file = f.read().lower().split()
+    for i, word in enumerate(read_file):
+        if word[-1] in string.punctuation:
+            read_file[i] = word[:-1]
+    return dict(Counter(read_file))
 
-# print(word_counter(file))
+
+def print_dict(word_dict):
+    tuple_list = (sorted(word_dict.items(), key=itemgetter(0)))
+    tuple_list = sorted(tuple_list, key=itemgetter(1), reverse=True)
+    for tup in tuple_list:
+        print(f'{tup[0]} {tup[1]}')
+
+
+print_dict(word_counter(file))
